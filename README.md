@@ -96,7 +96,7 @@ This design makes the system more realistic for enterprise AI assistant use case
 
 ---
 
-## Architecture
+## Architecture 
 
 ```text
 User Question
@@ -115,7 +115,10 @@ Agent Layer
  ▼
 Final Answer
 
-Internal RAG Flow
+```
+# Internal RAG Flow
+```
+
 Internal Documents
      │
      ▼
@@ -139,6 +142,7 @@ Relevant Chunks
      ▼
 LLM Grounded Answer
 
+```
 Layer-wise Explanation
 
 This section explains the project in the same way it is architected.
@@ -393,7 +397,7 @@ python-dotenv
 wikipedia
 
 Project Structure
-
+```
 ZUORA_PREP/
 ├── documents/                  # Fake internal company policy documents
 │   ├── hr_policy.txt
@@ -412,7 +416,7 @@ ZUORA_PREP/
 ├── README.md                   # Project documentation
 ├── .env                        # OpenAI API key (not pushed to GitHub)
 └── venv/                       # Local virtual environment (not pushed to GitHub)
-
+```
 How the System Works End-to-End: 
 
 Case 1: Internal company question
