@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.env
+vectorstore/
+.chromadb/
+internal-ai-knowledge-assistant/

@@ -1,0 +1,11 @@
+IT Support Guide
+
+Employees must raise IT support requests through the internal service desk portal.
+
+Laptop issues are categorized as high priority if they prevent the employee from working.
+
+Password reset requests are usually resolved within 2 business hours.
+
+New software installation requests require manager approval and security review.
+
+For urgent issues involving device access, VPN problems, or account lockout, employees should contact the IT helpdesk immediately.
