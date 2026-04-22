@@ -22,14 +22,6 @@ A Python-based enterprise-style AI assistant that combines **Retrieval-Augmented
 - [Tech Stack](#tech-stack)
 - [Project Structure](#project-structure)
 - [How the System Works End-to-End](#how-the-system-works-end-to-end)
-- [Setup Instructions](#setup-instructions)
-- [Running the Project](#running-the-project)
-- [API Usage](#api-usage)
-- [Sample Questions](#sample-questions)
-- [What I Learned](#what-i-learned)
-- [Current Limitations](#current-limitations)
-- [Future Improvements](#future-improvements)
-- [Why This Project Matters](#why-this-project-matters)
 
 ---
 
@@ -147,6 +139,191 @@ Relevant Chunks
      ▼
 LLM Grounded Answer
 
+Layer-wise Explanation
+
+This section explains the project in the same way it is architected.
+
+Layer 1: Data Layer
+
+The Data Layer is the knowledge source of the assistant.
+
+It contains the internal company documents stored in the documents/ folder. These documents simulate internal enterprise data such as:
+
+HR policies
+leave policies
+IT support guidelines
+finance reimbursement rules
+travel approval procedures
+
+These documents are the foundation for internal question answering.
+
+Why this layer matters
+
+Without this layer, the assistant would only rely on general model knowledge and would not be able to answer company-specific questions accurately.
+
+Current implementation
+
+The documents are stored as plain .txt files for simplicity and ease of experimentation.
+
+Layer 2: Ingestion Layer
+
+The Ingestion Layer prepares raw documents for semantic retrieval.
+
+This layer is implemented in ingest.py.
+
+What happens here
+Documents are loaded from the documents/ folder
+Each document is split into smaller overlapping chunks
+Each chunk is converted into an embedding vector
+The embeddings are stored in a local Chroma vector database
+Main components used
+DirectoryLoader
+TextLoader
+RecursiveCharacterTextSplitter
+OpenAIEmbeddings
+Chroma
+Why chunking is needed
+
+If large documents are stored as single blocks, retrieval quality suffers.
+Chunking improves retrieval precision by making individual pieces of information searchable.
+
+Why embeddings are needed
+
+Embeddings convert text into numerical vector representations so that semantically similar text can be retrieved even when the wording is different.
+
+Output of this layer
+
+The output of this layer is a persisted local vector store in the vectorstore/ directory.
+
+Layer 3: Retrieval and Generation Layer
+
+The Retrieval and Generation Layer is the core RAG layer.
+
+This logic is tested in rag_query.py and later reused inside the main assistant.
+
+What happens here
+
+When a user asks an internal company question:
+
+the question is converted into an embedding
+the retriever searches the vector store
+the most relevant chunks are returned
+those chunks are inserted into a prompt
+the language model answers only from the provided context
+Why this matters
+
+This is what turns the assistant from a generic chatbot into a document-grounded assistant.
+
+Instead of guessing, the assistant first retrieves evidence and then generates an answer based on that evidence.
+
+Grounding strategy
+
+The prompt explicitly tells the model:
+
+answer only from the retrieved context
+if the answer is not present, say it was not found in the company documents
+
+This reduces hallucination and improves trustworthiness.
+
+Layer 4: Agent and Tool Routing Layer
+
+The Agent Layer is the reasoning and orchestration layer of the project.
+
+This is implemented in agent.py.
+
+The agent decides:
+
+whether the answer can come from memory
+whether a tool is needed
+which tool should be used
+how to combine tool output into the final answer
+Tools used in the project
+1. CompanyKnowledgeBase
+
+Used for internal company questions such as:
+
+HR policies
+leave policy
+reimbursement policy
+IT support
+travel approvals
+employee procedures
+
+This tool internally runs the RAG retrieval and grounded answering pipeline.
+
+2. Wikipedia
+
+Used for general knowledge questions such as:
+
+Who is Satya Nadella?
+What is Microsoft?
+What is deep learning?
+
+This allows the assistant to answer non-company questions without confusing them with internal knowledge retrieval.
+
+3. Calculator
+
+Used for mathematical expressions such as:
+
+25 * 48
+sqrt(144)
+pow(2, 5)
+
+This demonstrates tool-based problem solving beyond text retrieval.
+
+Why the agent layer matters
+
+Without the agent, the system would need hardcoded routing rules everywhere.
+The agent gives the system flexible reasoning and tool selection behavior.
+
+Layer 5: Memory Layer
+
+The Memory Layer gives the assistant short-term conversational awareness.
+
+This is implemented using ConversationBufferMemory.
+
+What it does
+
+It stores recent conversation turns within the same active session.
+
+That allows the assistant to answer follow-up questions such as:
+
+My name is Sivaji.
+What is my name?
+Why this matters
+
+A useful assistant should not treat every message as isolated.
+
+Memory helps the assistant behave more naturally in conversation.
+
+Current scope
+
+This is session-based memory only.
+
+That means:
+
+memory works while the application is running
+memory resets when the program restarts
+it is not long-term persistent user memory
+Layer 6: API Layer
+
+The API Layer exposes the assistant as a backend service.
+
+This is implemented in api.py using FastAPI.
+
+What it provides
+a GET / endpoint for health checking
+a POST /ask endpoint for question answering
+automatic interactive Swagger documentation at /docs
+Why this matters
+
+This turns the project from a local terminal demo into a reusable backend service that can later be connected to:
+
+a frontend chat interface
+a Slack bot
+an internal company portal
+workflow automation tools
+
 Project Workflow
 
 The complete project workflow looks like this:
@@ -182,6 +359,16 @@ create request and response models
 expose /ask
 test using Swagger UI at /docs
 
+Key Features
+Internal document-based question answering using RAG
+ChromaDB vector store for semantic retrieval
+Multi-tool LangChain agent
+Tool routing between internal knowledge, Wikipedia, and calculator
+Short-term conversation memory
+FastAPI backend for integration
+Interactive API testing through Swagger docs
+Modular structure for future extension
+
 Tech Stack
 
 Core
@@ -204,6 +391,8 @@ Pydantic
 Utilities
 python-dotenv
 wikipedia
+
+Project Structure
 
 ZUORA_PREP/
 ├── documents/                  # Fake internal company policy documents
