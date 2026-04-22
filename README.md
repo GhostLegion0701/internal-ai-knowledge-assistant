@@ -116,7 +116,7 @@ Agent Layer
 Final Answer
 
 ```
-# Internal RAG Flow
+## Internal RAG Flow
 ```
 
 Internal Documents
@@ -143,7 +143,7 @@ Relevant Chunks
 LLM Grounded Answer
 
 ```
-Layer-wise Explanation
+## Layer-wise Explanation
 
 This section explains the project in the same way it is architected.
 
@@ -309,6 +309,7 @@ That means:
 memory works while the application is running
 memory resets when the program restarts
 it is not long-term persistent user memory
+
 Layer 6: API Layer
 
 The API Layer exposes the assistant as a backend service.
@@ -328,7 +329,7 @@ a Slack bot
 an internal company portal
 workflow automation tools
 
-Project Workflow
+## Project Workflow
 
 The complete project workflow looks like this:
 
@@ -363,7 +364,8 @@ create request and response models
 expose /ask
 test using Swagger UI at /docs
 
-Key Features
+## Key Features
+
 Internal document-based question answering using RAG
 ChromaDB vector store for semantic retrieval
 Multi-tool LangChain agent
@@ -373,7 +375,7 @@ FastAPI backend for integration
 Interactive API testing through Swagger docs
 Modular structure for future extension
 
-Tech Stack
+## Tech Stack
 
 Core
 Python
@@ -396,7 +398,7 @@ Utilities
 python-dotenv
 wikipedia
 
-Project Structure
+## Project Structure
 ```
 ZUORA_PREP/
 ├── documents/                  # Fake internal company policy documents
@@ -417,7 +419,7 @@ ZUORA_PREP/
 ├── .env                        # OpenAI API key (not pushed to GitHub)
 └── venv/                       # Local virtual environment (not pushed to GitHub)
 ```
-How the System Works End-to-End: 
+## How the System Works End-to-End: 
 
 Case 1: Internal company question
 
